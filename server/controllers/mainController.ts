@@ -6,5 +6,9 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 
 export const postLogin = (req: Request, res: Response, next: NextFunction) => {
   console.log(req.body);
-  res.send({ message: "Hello World!" });
+  if (req.body.password === "admin") {
+    res.send({ message: "Login Successful!", authenticated: true });
+  } else {
+    res.send({ message: "Login Failed!", authenticated: false });
+  }
 };
