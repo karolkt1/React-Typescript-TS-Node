@@ -12,3 +12,15 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
     res.send({ message: "Login Failed!", authenticated: false });
   }
 };
+
+export const getTabulator = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const data = [
+    { firstName: "Oli", lastName: "Bob" },
+    { firstName: "Mary", lastName: "May" },
+  ];
+  res.send(data);
+};

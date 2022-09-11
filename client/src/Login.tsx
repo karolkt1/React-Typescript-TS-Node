@@ -4,12 +4,16 @@ import { Container, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import { Navigate, Outlet } from "react-router-dom";
 
-class Login extends React.Component<{}, { email: string; password: string }> {
+class Login extends React.Component<
+  {},
+  { email: string; password: string; authenticated: string }
+> {
   constructor(props: any) {
     super(props);
     this.state = {
       email: "",
       password: "",
+      authenticated: "false",
     };
   }
 
@@ -23,11 +27,10 @@ class Login extends React.Component<{}, { email: string; password: string }> {
     let res = await axios.post("http://localhost:8000/login", data);
     if (res.data.authenticated == true) {
       localStorage.setItem("authenticated", "true");
-      return <Outlet></Outlet>;
     } else {
       localStorage.setItem("authenticated", "false");
-      return <Navigate to="/main" />;
     }
+    this.setState({ authenticated: localStorage.getItem("authenticated")! });
   };
 
   render() {
@@ -65,6 +68,7 @@ class Login extends React.Component<{}, { email: string; password: string }> {
               Submit
             </Button>
           </Form>
+          {this.state.authenticated == "true" ? <Navigate to="/main" /> : null}
         </div>
       </Container>
     );
