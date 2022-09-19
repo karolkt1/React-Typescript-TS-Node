@@ -6,16 +6,28 @@ import { Navigate, Outlet } from "react-router-dom";
 
 class Login extends React.Component<
   {},
-  { email: string; password: string; authenticated: string }
+  { email: string; password: string; authenticated: boolean }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
       email: "",
       password: "",
-      authenticated: "false",
+      authenticated: false,
     };
   }
+
+  setAuthToken = (token: string | null) => {
+    if (token) {
+      localStorage.setItem("token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      this.setState({ authenticated: true });
+    } else {
+      localStorage.removeItem("token");
+      delete axios.defaults.headers.common["Authorization"];
+      this.setState({ authenticated: false });
+    }
+  };
 
   handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -25,12 +37,7 @@ class Login extends React.Component<
     };
     // const data = new FormData(event.target);
     let res = await axios.post("http://localhost:8000/login", data);
-    if (res.data.authenticated == true) {
-      localStorage.setItem("authenticated", "true");
-    } else {
-      localStorage.setItem("authenticated", "false");
-    }
-    this.setState({ authenticated: localStorage.getItem("authenticated")! });
+    this.setAuthToken(res.data.token);
   };
 
   render() {
@@ -68,7 +75,7 @@ class Login extends React.Component<
               Submit
             </Button>
           </Form>
-          {this.state.authenticated == "true" ? <Navigate to="/main" /> : null}
+          {this.state.authenticated == true ? <Navigate to="/main" /> : null}
         </div>
       </Container>
     );

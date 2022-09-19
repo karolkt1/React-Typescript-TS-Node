@@ -1,16 +1,17 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Container } from "react-bootstrap";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 class MainPage extends React.Component<{}, { navigate: string }> {
   constructor(props: any) {
     super(props);
     this.state = { navigate: "" };
   }
-  navigateState = (link) => {
+  navigateState = (link: string) => {
     this.setState({ navigate: link });
   };
+
 
   render() {
     return (
@@ -25,16 +26,9 @@ class MainPage extends React.Component<{}, { navigate: string }> {
         >
           Tabulator
         </Button>
-        {(() => {
-          switch (this.state.navigate) {
-            case "/tabulator":
-              return <Navigate to="/tabulator" />;
-            case "/tanstacktable":
-              return <Navigate to="/tanstacktable" />;
-            default:
-              return <Navigate to="/main" />;
-          }
-        })()}
+        <div>
+          {this.state.navigate && <Navigate to={this.state.navigate} />}
+        </div>
       </Container>
     );
   }
